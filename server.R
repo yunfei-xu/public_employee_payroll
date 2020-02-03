@@ -13,9 +13,10 @@ shinyServer(function(input, output) {
                  #& title == input$job
                  ) # select location & year & job
     
-    selectInput("year",
+    checkboxGroupInput("year",
                 "Select year:",
-                choices = sort(unique(pp$fy)))
+                choices = sort(unique(pp$fy)),
+                selected = "2016")
     
   })
   
@@ -24,11 +25,14 @@ shinyServer(function(input, output) {
                  & fy == as.numeric(input$year)
                  #& str_detect(title,input$job)
                  #& title == input$job
-    ) # select location & year & job
+                ) # select location & year & job
     
-    selectInput("job",
-                "Select job:",
-                choices = unique(pp$title))
+    #selectInput("job",
+    #            "Select job:",
+    #           choices = unique(pp$title))
+    textInput("job",
+               "Search Job:",
+               "data")
     
   })
   
@@ -36,7 +40,8 @@ shinyServer(function(input, output) {
      
      pp <- filter(main,location==input$location
                   & fy == as.numeric(input$year)
-                  & str_detect(title,input$job)
+                  & str_detect(title,
+                               regex(input$job,ignore_case = T))
                   #& title == input$job
                   ) # select location & year & job
     
@@ -44,6 +49,7 @@ shinyServer(function(input, output) {
                 max(pp$annual),
                 length.out = input$bins + 1)
     # draw the histogram with the specified number of bins
+    options(scipen=999)
     hist(pp$annual, breaks = bins, 
          main = "Public Employee Payroll",
          xlab="Employee Salary (in dollars)", 

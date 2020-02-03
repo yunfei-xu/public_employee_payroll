@@ -17,9 +17,10 @@ shinyUI(fluidPage(
       
       tags$hr(), # draw a line 
       
-      selectInput("location",
+      checkboxGroupInput("location",
                 "Select location:",
-                  choices = unique(main$location)),
+                  choices = unique(main$location),
+                  selected = "RI 2011-2020"),
       # selectInput("year",
       #             "Select year:",
       #             choices = sort(unique(main$fy))),
